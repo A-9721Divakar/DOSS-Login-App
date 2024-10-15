@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to DOSS</title>
+    <style>
+        /* Basic reset for body */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Arial', sans-serif;
+            /* Adding the background image */
+            background-image: url('https://share1.cloudhq-mkt3.net/dff4ed1428796d.jpeg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .container {
+            background-color: rgba(255, 255, 255, 0.8); /* Make background of containers slightly transparent */
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            width: 320px;
+            text-align: center;
+            position: relative;
+        }
+        h2 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        input[type="text"], input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        input[type="text"]:focus, input[type="password"]:focus {
+            border-color: #f78da7;
+        }
+        .btn {
+            width: 100%;
+            padding: 10px;
+            margin-top: 15px;
+            background-color: #f78da7;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        .btn:hover {
+            background-color: #e75b8d;
+        }
+        .hidden {
+            display: none;
+        }
+        .message {
+            color: red;
+            margin-top: 10px;
+        }
+        .logout-btn {
+            background-color: #ff6347;
+            padding: 10px;
+            color: white;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        .logout-btn:hover {
+            background-color: #e75b8d;
+        }
+        .create-account {
+            background-color: #4CAF50;
+            padding: 10px;
+            color: white;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .create-account:hover {
+            background-color: #45a049;
+        }
+        /* Transparent "Doss" Watermark */
+        .watermark {
+            position: absolute;
+            font-size: 72px;
+            color: rgba(0, 0, 0, 0.05);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: -1;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Welcome Page -->
+    <div class="container" id="welcomeContainer">
+        <h2>WELCOME TO THE DOSS</h2>
+        <p>Please log in to continue.</p>
+        <button class="btn" onclick="showLoginPage()">Login</button>
+    </div>
+
+    <!-- Login Page -->
+    <div class="container hidden" id="loginContainer">
+        <h2>Login</h2>
+        <input type="text" id="username" placeholder="Enter Username" required>
+        <input type="password" id="password" placeholder="Enter Password" required>
+        <button class="btn" onclick="login()">Login</button>
+        <button class="create-account" onclick="showCreateAccount()">Create a New Account</button>
+        <div id="loginMessage" class="message hidden"></div>
+        <!-- Transparent "Doss" watermark -->
+        <div class="watermark">Doss</div>
+    </div>
+
+    <!-- Create Account Page -->
+    <div class="container hidden" id="createAccountContainer">
+        <h2>Create Account</h2>
+        <input type="text" id="newUsername" placeholder="Create Username" required>
+        <input type="password" id="newPassword" placeholder="Create Password" required>
+        <button class="btn" onclick="createAccount()">Create Account</button>
+        <div id="accountMessage" class="message hidden"></div>
+        <!-- Transparent "Doss" watermark -->
+        <div class="watermark">Doss</div>
+    </div>
+
+    <!-- Logout Page -->
+    <div class="container hidden" id="logoutContainer">
+        <h2>Welcome, <span id="userDisplay"></span>!</h2>
+        <p>You are successfully logged in.</p>
+        <button class="logout-btn" onclick="logout()">Logout</button>
+        <!-- Transparent "Doss" watermark -->
+        <div class="watermark">Doss</div>
+    </div>
+
+    <script>
+        let storedUsername = null;
+        let storedPassword = null;
+
+        // Function to show login page from welcome page
+        function showLoginPage() {
+            document.getElementById("welcomeContainer").classList.add("hidden");
+            document.getElementById("loginContainer").classList.remove("hidden");
+        }
+
+        // Function for logging in
+        function login() {
+            var username = document.getElementById("username").value;
+            var password = document.getElementById("password").value;
+            var message = document.getElementById("loginMessage");
+
+            // Check if account exists and password is correct
+            if (username === storedUsername && password === storedPassword) {
+                message.classList.add("hidden");
+                showLogoutScreen(username);
+            } else {
+                // Display error message if login is wrong
+                message.innerText = "Invalid Username or Password!";
+                message.classList.remove("hidden");
+            }
+        }
+
+        // Function to show logout screen
+        function showLogoutScreen(username) {
+            // Hide the login form and show the welcome/logout screen
+            document.getElementById("loginContainer").classList.add("hidden");
+            document.getElementById("logoutContainer").classList.remove("hidden");
+            document.getElementById("userDisplay").innerText = username;
+        }
+
+        // Function to log out and reset back to login screen
+        function logout() {
+            document.getElementById("loginContainer").classList.remove("hidden");
+            document.getElementById("logoutContainer").classList.add("hidden");
+            document.getElementById("username").value = "";
+            document.getElementById("password").value = "";
+            document.getElementById("loginMessage").classList.add("hidden");
+        }
+
+        // Function to show create account form
+        function showCreateAccount() {
+            document.getElementById("loginContainer").classList.add("hidden");
+            document.getElementById("createAccountContainer").classList.remove("hidden");
+        }
+
+        // Function for creating a new account
+        function createAccount() {
+            var newUsername = document.getElementById("newUsername").value;
+            var newPassword = document.getElementById("newPassword").value;
+            var message = document.getElementById("accountMessage");
+
+            if (newUsername && newPassword) {
+                // Save the account details in variables (simulate account creation)
+                storedUsername = newUsername;
+                storedPassword = newPassword;
+
+                // Reset form and show success message
+                message.classList.add("hidden");
+                document.getElementById("createAccountContainer").classList.add("hidden");
+                document.getElementById("loginContainer").classList.remove("hidden");
+                alert("Account Created! You can now log in.");
+            } else {
+                // Show error message if fields are empty
+                message.innerText = "Please enter both username and password.";
+                message.classList.remove("hidden");
+            }
+        }
+    </script>
+
+</body>
+</html>
